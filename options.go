@@ -164,6 +164,15 @@ func (o *Options) SetCreateIfMissing(b bool) {
 
 // SetFilterPolicy causes Open to create a new database that will uses filter
 // created from the filter policy passed in.
+
+func (o *Options) SetMaxBackgroundCompactions(n int) {
+	C.rocksdb_options_set_max_background_compactions(o.Opt, C.int(n))
+}
+
+func (o *Options) SetMaxBackgroundFlushes(n int) {
+	C.rocksdb_options_set_max_background_flushes(o.Opt, C.int(n))
+}
+
 func (o *Options) SetFilterPolicy(fp *FilterPolicy) {
 	var policy *C.rocksdb_filterpolicy_t
 	if fp != nil {
