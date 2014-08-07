@@ -127,6 +127,19 @@ func (o *Options) SetMaxOpenFiles(n int) {
 	C.rocksdb_options_set_max_open_files(o.Opt, C.int(n))
 }
 
+// SetTargetFileSizeBase sets the target file size for compaction.
+// target_file_size_base is per-file size for level-1.
+// Target file size for level L can be calculated by
+// target_file_size_base * (target_file_size_multiplier ^ (L-1))
+// For example, if target_file_size_base is 2MB and
+// target_file_size_multiplier is 10, then each file on level-1 will
+// be 2MB, and each file on level 2 will be 20MB,
+// and each file on level-3 will be 200MB.
+// by default target_file_size_base is 2MB.
+func (o *Options) SetTargetFileSizeBase(n int) {
+	C.rocksdb_options_set_target_file_size_base(o.Opt, C.uint64_t(n))
+}
+
 // SetBlockSize sets the approximate size of user data packed per block.
 //
 // The default is roughly 4096 uncompressed bytes. A better setting depends on
@@ -165,10 +178,16 @@ func (o *Options) SetCreateIfMissing(b bool) {
 // SetFilterPolicy causes Open to create a new database that will uses filter
 // created from the filter policy passed in.
 
+// SetMaxBackgroundCompactions sets the maximum number of concurrent background compaction jobs, submitted to
+// the default LOW priority thread pool. Defaults to 1. See https://github.com/facebook/rocksdb/blob/master/include/rocksdb/options.h
+// for further options.
 func (o *Options) SetMaxBackgroundCompactions(n int) {
 	C.rocksdb_options_set_max_background_compactions(o.Opt, C.int(n))
 }
 
+// SetMaxBackgroundFlushes sets the maximum number of concurrent background memtable flush jobs, submitted to
+// the HIGH priority thread pool. Defaults to 1. See https://github.com/facebook/rocksdb/blob/master/include/rocksdb/options.h
+// for further information.
 func (o *Options) SetMaxBackgroundFlushes(n int) {
 	C.rocksdb_options_set_max_background_flushes(o.Opt, C.int(n))
 }
